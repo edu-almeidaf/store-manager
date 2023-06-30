@@ -48,6 +48,16 @@ const productFromServiceSuccessful = {
   data: productFromModel,
 };
 
+const productIdFromDB = { insertId: 4 };
+const productIdFromModel = 4;
+
+const newProductFromModel = { id: 4, name: 'Armadura do Homem de Ferro' };
+
+const productFromServiceCreated = {
+  status: 'CREATED',
+  data: newProductFromModel,
+};
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -55,4 +65,8 @@ module.exports = {
   productFromModel,
   productsFromServiceSuccessful,
   productFromServiceSuccessful,
+  productIdFromDB,
+  productIdFromModel,
+  newProductFromModel,
+  productFromServiceCreated,
 };

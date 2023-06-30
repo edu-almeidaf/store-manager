@@ -7,6 +7,8 @@ const {
   productsFromModel,
   productFromServiceSuccessful,
   productFromModel,
+  productFromServiceCreated,
+  newProductFromModel,
 } = require('../mocks/products.mock');
 const { productsController } = require('../../../src/controllers');
 
@@ -64,6 +66,23 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     await productsController.findById(req, res);
     expect(res.status).to.have.been.calledWith(200);
     expect(res.json).to.have.been.calledWith(productFromModel);
+  });
+
+  it('Inserindo product com sucesso - status 201', async function () {
+    sinon.stub(productsService, 'createProduct').resolves(productFromServiceCreated);
+
+    const req = {
+      params: {},
+      body: { name: 'Armadura do Homem de Ferro' },
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.createProduct(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(newProductFromModel);
   });
 
   afterEach(function () {

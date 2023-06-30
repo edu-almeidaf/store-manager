@@ -1,3 +1,4 @@
+const { formattedColumns, formattedPlaceholders } = require('../utils/handleQuery');
 const connection = require('./connection');
 
 const findAll = async () => {
@@ -14,7 +15,18 @@ const findById = async (productId) => {
   return product;
 };
 
+const insert = async (product) => {
+  const columns = formattedColumns(product);
+  const placeholders = formattedPlaceholders(product);
+  const query = `INSERT INTO products (${columns}) VALUE (${placeholders})`;
+
+  const [{ insertId }] = await connection.execute(query, [...Object.values(product)]);
+
+  return insertId;
+};
+
 module.exports = {
   findAll,
   findById,
+  insert,
 };

@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const {
-  productsFromModel, productFromModel,
+  productsFromModel, productFromModel, productIdFromModel, newProductFromModel,
 } = require('../mocks/products.mock');
 const { productsModel } = require('../../../src/models');
 const { productsService } = require('../../../src/services');
@@ -42,6 +42,16 @@ describe('Realizando testes - PRODUCTS Service:', function () {
     expect(responseService.status).to.be.equal('NOT_FOUND');
     expect(responseService.data.message).to.be.a('string');
     expect(responseService.data.message).to.be.equal('Product not found');
+  });
+
+  it('Inserindo product com sucesso', async function () {
+    sinon.stub(productsModel, 'insert').resolves(productIdFromModel);
+    sinon.stub(productsModel, 'findById').resolves(newProductFromModel);
+
+    const inputData = { name: 'Armadura do Homem de Ferro' };
+    const responseService = await productsService.createProduct(inputData);
+    expect(responseService.status).to.be.equal('CREATED');
+    expect(responseService.data).to.be.deep.equal({ id: 4, name: 'Armadura do Homem de Ferro' });
   });
 
   afterEach(function () {
