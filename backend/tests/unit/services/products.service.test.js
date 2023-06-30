@@ -97,6 +97,26 @@ describe('Realizando testes - PRODUCTS Service:', function () {
     expect(responseService.data).to.be.deep.equal({ message: 'Product not found' });
   });
 
+  it('Deletando product com sucesso', async function () {
+    sinon.stub(productsModel, 'remove').resolves(undefined);
+    sinon.stub(productsModel, 'findById')
+      .onFirstCall()
+      .resolves(productFromModel)
+      .onSecondCall()
+      .resolves(undefined);
+    const inputId = 1;
+    const responseService = await productsService.deleteProduct(inputId);
+    expect(responseService.status).to.be.equal('DELETED');
+  });
+
+  it('Não é possível deletar um product com id inexistente', async function () {
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+    const inputId = 999999;
+    const responseService = await productsService.deleteProduct(inputId);
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data).to.be.deep.equal({ message: 'Product not found' });
+  });
+
   afterEach(function () {
     sinon.restore();
   });

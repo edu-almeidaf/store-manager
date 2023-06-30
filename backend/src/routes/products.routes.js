@@ -6,5 +6,6 @@ route.get('/', productsController.findAll);
 route.get('/:id', productsController.findById);
 route.post('/', validateProductsFields, productsController.createProduct);
 route.put('/:id', validateProductsFields, productsController.updateProduct);
+route.delete('/:id', productsController.deleteProduct);
 
 module.exports = route;

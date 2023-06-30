@@ -50,6 +50,14 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
     expect(result.affectedRows).to.be.equal(1);
   });
 
+  it('Removendo product com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([updateStatusProductFromDB]);
+
+    const inputId = 1;
+    const result = await productsModel.remove(inputId);
+    expect(result.affectedRows).to.be.equal(1);
+  });
+
   afterEach(function () {
     sinon.restore();
   });

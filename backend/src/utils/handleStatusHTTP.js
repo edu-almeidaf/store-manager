@@ -1,5 +1,6 @@
 const httpStatusMap = {
   SUCCESSFUL: 200,
+  DELETED: 204,
   CREATED: 201,
   NOT_FOUND: 404,
   CONFLICT: 409,

@@ -37,10 +37,18 @@ const update = async (productId, dataToUpdate) => {
   const [result] = await connection.execute(query, [...Object.values(dataToUpdate), productId]);
   return result;
 };
+const remove = async (productId) => {
+  const query = 'DELETE FROM products WHERE id = ?';
+
+  const [result] = await connection.execute(query, [productId]);
+  console.log(result);
+  return result;
+};
 
 module.exports = {
   findAll,
   findById,
   insert,
   update,
+  remove,
 };
