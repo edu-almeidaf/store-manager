@@ -1,4 +1,8 @@
-const { salesModel } = require('../models');
+const {
+  salesModel,
+  productsModel,
+} = require('../models');
+const schema = require('./validations/validationInputValues');
 
 const findAll = async () => {
   const sales = await salesModel.findAll();
@@ -15,7 +19,25 @@ const findById = async (saleId) => {
   return { status: 'SUCCESSFUL', data: sale };
 };
 
+const verifyProductId = (allProducts, sale) => {
+  const allproductsId = allProducts.map((product) => product.id);
+  const allSaleProductsId = sale.map((product) => product.productId);
+  const validateId = allSaleProductsId.every((product) => allproductsId.includes(product));
+
+  return validateId;
+};
+
 const createSale = async (sale) => {
+  const error = schema.validateAddSale(sale);
+  if (error) {
+    return { status: error.status, data: { message: error.message } };
+  }
+  const allProducts = await productsModel.findAll();
+  const isProductIdExists = verifyProductId(allProducts, sale);
+  if (!isProductIdExists) {
+    return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+  }
+
   const insertId = await salesModel.insertSale();
   const newSale = await salesModel.insertProductsOnSale(insertId, sale);
   return { status: 'CREATED', data: newSale };
