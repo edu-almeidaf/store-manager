@@ -99,11 +99,8 @@ describe('Realizando testes - PRODUCTS Service:', function () {
 
   it('Deletando product com sucesso', async function () {
     sinon.stub(productsModel, 'remove').resolves(undefined);
-    sinon.stub(productsModel, 'findById')
-      .onFirstCall()
-      .resolves(productFromModel)
-      .onSecondCall()
-      .resolves(undefined);
+    sinon.stub(productsModel, 'findById').resolves(productFromModel);
+    
     const inputId = 1;
     const responseService = await productsService.deleteProduct(inputId);
     expect(responseService.status).to.be.equal('DELETED');

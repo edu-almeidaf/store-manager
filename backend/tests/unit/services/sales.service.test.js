@@ -101,6 +101,24 @@ describe('Realizando testes - SALES Service:', function () {
   },
   );
 
+  it('Deletando sale com sucesso', async function () {
+    sinon.stub(salesModel, 'removeSale').resolves(undefined);
+    sinon.stub(salesModel, 'removeSaleProducts').resolves(undefined);
+    sinon.stub(salesModel, 'findById').resolves(saleFromModel);
+
+    const inputId = 1;
+    const responseService = await salesService.deleteSale(inputId);
+    expect(responseService.status).to.be.equal('DELETED');
+  });
+
+  it('Não é possível deletar uma sale com id inexistente', async function () {
+    sinon.stub(salesModel, 'findById').resolves(undefined);
+    const inputId = 999999;
+    const responseService = await salesService.deleteSale(inputId);
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data).to.be.deep.equal({ message: 'Sale not found' });
+  });
+
   afterEach(function () {
     sinon.restore();
   });

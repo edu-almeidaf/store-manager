@@ -112,6 +112,42 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith({ message: 'You must to pass an array' });
   });
 
+  it('Deletando sale com sucesso - status 204', async function () {
+    sinon.stub(salesService, 'deleteSale').resolves({ status: 'DELETED' });
+
+    const req = {
+      params: { id: 1 },
+      body: {},
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      end: sinon.stub(),
+    };
+
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(204);
+    expect(res.end).to.have.been.calledWith();
+  });
+
+  it('Não é possível deletar um product com o id inexistente - status 404', async function () {
+    sinon.stub(salesService, 'deleteSale').resolves(
+      { status: 'NOT_FOUND', data: { message: 'Sale not found' } },
+    );
+
+    const req = {
+      params: { id: 999999 },
+      body: {},
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
+
   afterEach(function () {
     sinon.restore();
   });

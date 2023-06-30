@@ -11,6 +11,7 @@ const {
   saleIdFromModel,
   // newSaleFromModel,
 } = require('../mocks/sales.mock');
+const { updateStatusProductFromDB } = require('../mocks/products.mock');
 
 describe('Realizando testes - SALES MODEL:', function () {
   it('Recuperando sales com sucesso', async function () {
@@ -85,6 +86,22 @@ describe('Realizando testes - SALES MODEL:', function () {
   //   const result = await salesModel.insertProductsOnSale(saleId, saleData);
   //   expect(result).to.deep.equal(newSaleFromModel);
   // });
+
+  it('Removendo sale com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([updateStatusProductFromDB]);
+
+    const inputId = 1;
+    const result = await salesModel.removeSale(inputId);
+    expect(result.affectedRows).to.be.equal(1);
+  });
+
+  it('Removendo products da sale com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([updateStatusProductFromDB]);
+
+    const inputId = 1;
+    const result = await salesModel.removeSaleProducts(inputId);
+    expect(result.affectedRows).to.be.equal(1);
+  });
 
   afterEach(function () {
     sinon.restore();

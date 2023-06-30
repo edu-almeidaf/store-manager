@@ -43,8 +43,21 @@ const createSale = async (sale) => {
   return { status: 'CREATED', data: newSale };
 };
 
+const deleteSale = async (productId) => {
+  const saleExists = await salesModel.findById(productId);
+  if (!saleExists || saleExists.length === 0) {
+    return { status: 'NOT_FOUND', data: { message: 'Sale not found' } };
+  }
+
+  await salesModel.removeSale(productId);
+  await salesModel.removeSaleProducts(productId);
+
+  return { status: 'DELETED' };
+};
+
 module.exports = {
   findAll,
   findById,
   createSale,
+  deleteSale,
 };
