@@ -1,4 +1,8 @@
-const { formattedColumns, formattedPlaceholders } = require('../utils/handleQuery');
+const {
+  formattedColumns,
+  formattedPlaceholders,
+  formattedUpdateColumns,
+} = require('../utils/handleQuery');
 const connection = require('./connection');
 
 const findAll = async () => {
@@ -25,8 +29,18 @@ const insert = async (product) => {
   return insertId;
 };
 
+const update = async (productId, dataToUpdate) => {
+  const columns = formattedUpdateColumns(dataToUpdate);
+
+  const query = `UPDATE products SET ${columns} WHERE id = ?;`;
+
+  const [result] = await connection.execute(query, [...Object.values(dataToUpdate), productId]);
+  return result;
+};
+
 module.exports = {
   findAll,
   findById,
   insert,
+  update,
 };

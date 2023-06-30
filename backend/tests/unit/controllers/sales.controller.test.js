@@ -94,7 +94,7 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
     expect(res.json).to.have.been.calledWith({ message: '"productId" is required' });
   });
 
-  it('AO passar um input que não seja um array, a venda não é cadastrada - status 422', async function () {
+  it('Ao passar um input que não seja um array, a venda não é cadastrada - status 422', async function () {
     const next = sinon.stub().returns();
     const req = {
       params: {},

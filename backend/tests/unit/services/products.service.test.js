@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const {
-  productsFromModel, productFromModel, productIdFromModel, newProductFromModel,
+  productsFromModel, productFromModel, productIdFromModel, newProductFromModel, updatedProductFromModel,
 } = require('../mocks/products.mock');
 const { productsModel } = require('../../../src/models');
 const { productsService } = require('../../../src/services');
@@ -61,6 +61,40 @@ describe('Realizando testes - PRODUCTS Service:', function () {
     expect(responseService.data).to.be.deep.equal({
       message: '"name" length must be at least 5 characters long',
     });
+  });
+
+  it('Atualizando product com sucesso', async function () {
+    sinon.stub(productsModel, 'update').resolves(undefined);
+    sinon.stub(productsModel, 'findById')
+      .onFirstCall()
+      .resolves(productFromModel)
+      .onSecondCall()
+      .resolves(updatedProductFromModel);
+    const inputId = 1;
+    const inputData = { name: 'Jóia do tempo' };
+    const responseService = await productsService.updateProduct(inputId, inputData);
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.deep.equal({ id: 1, name: 'Jóia do tempo' });
+  });
+
+  it('Não é possível atualizar um product com o name contendo menos que 5 caracteres', async function () {
+    const inputId = 1;
+    const inputData = { name: 'Jói' };
+    const responseService = await productsService.updateProduct(inputId, inputData);
+    expect(responseService.status).to.be.equal('INVALID_VALUE');
+    expect(responseService.data).to.be.deep.equal({
+      message: '"name" length must be at least 5 characters long',
+    });
+  });
+
+  it('Não é possível atualizar um product com o id inexistente', async function () {
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+
+    const inputId = 999999;
+    const inputData = { name: 'Jóia do tempo' };
+    const responseService = await productsService.updateProduct(inputId, inputData);
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data).to.be.deep.equal({ message: 'Product not found' });
   });
 
   afterEach(function () {

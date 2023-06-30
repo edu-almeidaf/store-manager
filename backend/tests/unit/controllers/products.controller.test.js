@@ -9,6 +9,8 @@ const {
   productFromModel,
   productFromServiceCreated,
   newProductFromModel,
+  productFromServiceUpdated,
+  updatedProductFromModel,
 } = require('../mocks/products.mock');
 const { productsController } = require('../../../src/controllers');
 const { validateProductsFields } = require('../../../src/middlewares/validateProductsFields');
@@ -103,6 +105,26 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     validateProductsFields(req, res, next);
     expect(res.status).to.have.been.calledWith(400);
     expect(res.json).to.have.been.calledWith({ message: '"name" is required' });
+  });
+
+  it('Atualizando product com sucesso - status 200', async function () {
+    sinon.stub(productsService, 'updateProduct').resolves(productFromServiceUpdated);
+    const next = sinon.stub().returns();
+
+    const req = {
+      params: { id: 1 },
+      body: { name: 'Jóia do tempo' },
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    validateProductsFields(req, res, next);
+    expect(next).to.have.been.calledWith();
+    await productsController.updateProduct(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(updatedProductFromModel);
   });
 
   afterEach(function () {

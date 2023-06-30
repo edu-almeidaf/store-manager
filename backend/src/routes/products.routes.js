@@ -5,5 +5,6 @@ const { validateProductsFields } = require('../middlewares/validateProductsField
 route.get('/', productsController.findAll);
 route.get('/:id', productsController.findById);
 route.post('/', validateProductsFields, productsController.createProduct);
+route.put('/:id', validateProductsFields, productsController.updateProduct);
 
 module.exports = route;

@@ -8,6 +8,7 @@ const {
   productFromModel,
   productIdFromDB,
   productIdFromModel,
+  updateStatusProductFromDB,
 } = require('../mocks/products.mock');
 const { productsModel } = require('../../../src/models');
 
@@ -38,6 +39,15 @@ describe('Realizando testes - PRODUCTS MODEL:', function () {
     const inputData = { name: 'Armadura do Homem de Ferro' };
     const result = await productsModel.insert(inputData);
     expect(result).to.be.equal(productIdFromModel);
+  });
+
+  it('Atualizando product com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([updateStatusProductFromDB]);
+
+    const inputId = 1;
+    const inputData = { name: 'Armadura do Homem de Ferro' };
+    const result = await productsModel.update(inputId, inputData);
+    expect(result.affectedRows).to.be.equal(1);
   });
 
   afterEach(function () {

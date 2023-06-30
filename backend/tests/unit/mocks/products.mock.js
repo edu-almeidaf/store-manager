@@ -58,6 +58,26 @@ const productFromServiceCreated = {
   data: newProductFromModel,
 };
 
+const updateStatusProductFromDB = {
+  fieldCount: 0,
+  affectedRows: 1,
+  insertId: 0,
+  info: 'Rows matched: 1  Changed: 0  Warnings: 0',
+  serverStatus: 2,
+  warningStatus: 0,
+  changedRows: 0,
+};
+
+const updatedProductFromModel = {
+  id: 1,
+  name: 'Jóia do tempo',
+};
+
+const productFromServiceUpdated = {
+  status: 'SUCCESSFUL',
+  data: updatedProductFromModel,
+};
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -69,4 +89,7 @@ module.exports = {
   productIdFromModel,
   newProductFromModel,
   productFromServiceCreated,
+  updateStatusProductFromDB,
+  updatedProductFromModel,
+  productFromServiceUpdated,
 };

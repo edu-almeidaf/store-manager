@@ -26,8 +26,26 @@ const createProduct = async (product) => {
   return { status: 'CREATED', data: newProduct };
 };
 
+const updateProduct = async (productId, data) => {
+  const error = schema.validateAddProduct(data);
+  if (error) {
+    return { status: error.status, data: { message: error.message } };
+  }
+
+  const productExists = await productsModel.findById(productId);
+  if (!productExists) {
+    return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+  }
+
+  await productsModel.update(productId, data);
+  const productUpdated = await productsModel.findById(productId);
+
+  return { status: 'SUCCESSFUL', data: productUpdated };
+}; 
+
 module.exports = {
   findAll,
   findById,
   createProduct,
+  updateProduct,
 };

@@ -8,13 +8,13 @@ const formattedPlaceholders = (object) => (
   Object.keys(object).map((_key) => '?').join(', ')
 );
 
-// const formattedUpdateColumns = (object) => (
-//   Object.keys(snakeize(object))
-//     .map((key) => `${key}=?`).join(', ')
-// );
+const formattedUpdateColumns = (object) => (
+  Object.keys(snakeize(object))
+    .map((key) => `${key}=?`).join(', ')
+);
 
 module.exports = {
   formattedColumns,
   formattedPlaceholders,
-  // formattedUpdateColumns,
+  formattedUpdateColumns,
 };
