@@ -13,7 +13,7 @@ const { salesController } = require('../../../src/controllers');
 const { expect } = chai;
 chai.use(sinonChai);
 
-describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
+describe('Realizando testes - SALES CONTROLLER:', function () {
   it('Recuperando sales com sucesso - Status 200', async function () {
     sinon.stub(salesService, 'findAll')
       .resolves(salesFromServiceSuccessful);

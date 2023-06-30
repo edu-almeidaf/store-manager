@@ -6,8 +6,8 @@ const {
 const { salesModel } = require('../../../src/models');
 const { salesService } = require('../../../src/services');
 
-describe('Realizando testes - PRODUCTS Service:', function () {
-  it('Recuperando products com sucesso', async function () {
+describe('Realizando testes - SALES Service:', function () {
+  it('Recuperando sales com sucesso', async function () {
     sinon.stub(salesModel, 'findAll').resolves(salesFromModel);
 
     const responseData = [...salesFromModel];
