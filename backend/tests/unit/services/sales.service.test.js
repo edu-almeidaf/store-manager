@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const {
-  salesFromModel, saleFromModel,
+  salesFromModel, saleFromModel, saleIdFromModel, newSaleFromModel,
 } = require('../mocks/sales.mock');
 const { salesModel } = require('../../../src/models');
 const { salesService } = require('../../../src/services');
@@ -42,6 +42,28 @@ describe('Realizando testes - SALES Service:', function () {
     expect(responseService.status).to.be.equal('NOT_FOUND');
     expect(responseService.data.message).to.be.a('string');
     expect(responseService.data.message).to.be.equal('Sale not found');
+  });
+
+  it('Inserindo uma venda com sucesso', async function () {
+    sinon.stub(salesModel, 'insertSale').resolves(saleIdFromModel);
+    sinon.stub(salesModel, 'insertProductsOnSale').resolves(newSaleFromModel);
+
+    const inputData = [
+      {
+        productId: 1,
+        quantity: 1,
+      },
+      {
+        productId: 2,
+        quantity: 5,
+      },
+    ];
+
+    const responseData = { ...newSaleFromModel };
+
+    const responseService = await salesService.createSale(inputData);
+    expect(responseService.status).to.be.equal('CREATED');
+    expect(responseService.data).to.be.deep.equal(responseData);
   });
 
   afterEach(function () {

@@ -76,6 +76,22 @@ const saleFromServiceSuccessful = {
   data: saleFromModel,
 };
 
+const saleIdFromDB = { insertId: 3 };
+const saleIdFromModel = 3;
+
+const newSaleFromModel = {
+  id: 3,
+  itemsSold: [
+    { productId: 1, quantity: 1 },
+    { productId: 2, quantity: 5 },
+  ],
+};
+
+const saleFromServiceCreated = {
+  status: 'CREATED',
+  data: newSaleFromModel,
+};
+
 module.exports = {
   salesFromDB,
   salesFromModel,
@@ -83,4 +99,8 @@ module.exports = {
   saleFromModel,
   salesFromServiceSuccessful,
   saleFromServiceSuccessful,
+  saleIdFromDB,
+  saleIdFromModel,
+  newSaleFromModel,
+  saleFromServiceCreated,
 };
