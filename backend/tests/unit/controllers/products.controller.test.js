@@ -11,6 +11,8 @@ const {
   newProductFromModel,
   productFromServiceUpdated,
   updatedProductFromModel,
+  productsByQueryService,
+  productsByQuery,
 } = require('../mocks/products.mock');
 const { productsController } = require('../../../src/controllers');
 const { validateProductsFields } = require('../../../src/middlewares/validateProductsFields');
@@ -52,6 +54,24 @@ describe('Realizando testes - PRODUCTS CONTROLLER:', function () {
     await productsController.findAll(req, res);
     expect(res.status).to.have.been.calledWith(200);
     expect(res.json).to.have.been.calledWith(responseData);
+  });
+
+  it('Filtrando produtos pela query com sucesso - Status 200', async function () {
+    sinon.stub(productsService, 'findByQuery')
+      .resolves(productsByQueryService);
+    const req = {
+      query: { q: 'Tra' },
+      params: {},
+      body: {},
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.findByQuery(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(productsByQuery);
   });
 
   it('Recuperando um product pelo id com sucesso - Status 200', async function () {

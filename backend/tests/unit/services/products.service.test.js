@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const {
-  productsFromModel, productFromModel, productIdFromModel, newProductFromModel, updatedProductFromModel,
+  productsFromModel, productFromModel, productIdFromModel, newProductFromModel, updatedProductFromModel, productsByQuery,
 } = require('../mocks/products.mock');
 const { productsModel } = require('../../../src/models');
 const { productsService } = require('../../../src/services');
@@ -13,6 +13,31 @@ describe('Realizando testes - PRODUCTS Service:', function () {
     const responseData = [...productsFromModel];
 
     const responseService = await productsService.findAll();
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('array');
+    expect(responseService.data).to.have.lengthOf(3);
+    expect(responseService.data).to.be.deep.equal(responseData);
+  });
+
+  it('Filtrando products pela query com sucesso', async function () {
+    sinon.stub(productsModel, 'findAll').resolves(productsFromModel);
+
+    const inputData = 'Tra';
+    const responseService = await productsService.findByQuery(inputData);
+
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.an('array');
+    expect(responseService.data).to.have.lengthOf(1);
+    expect(responseService.data).to.be.deep.equal(productsByQuery);
+  });
+
+  it('Retorna todos os produtos se não existir a query', async function () {
+    sinon.stub(productsModel, 'findAll').resolves(productsFromModel);
+
+    const inputData = undefined;
+    const responseData = [...productsFromModel];
+    const responseService = await productsService.findByQuery(inputData);
 
     expect(responseService.status).to.be.equal('SUCCESSFUL');
     expect(responseService.data).to.be.an('array');

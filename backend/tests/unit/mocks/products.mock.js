@@ -78,6 +78,18 @@ const productFromServiceUpdated = {
   data: updatedProductFromModel,
 };
 
+const productsByQuery = [
+  {
+    id: 2,
+    name: 'Traje de encolhimento',
+  },
+];
+
+const productsByQueryService = {
+  status: 'SUCCESSFUL',
+  data: productsByQuery,
+};
+
 module.exports = {
   productsFromDB,
   productsFromModel,
@@ -92,4 +104,6 @@ module.exports = {
   updateStatusProductFromDB,
   updatedProductFromModel,
   productFromServiceUpdated,
+  productsByQuery,
+  productsByQueryService,
 };

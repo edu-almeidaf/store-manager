@@ -6,6 +6,12 @@ const findAll = async (_req, res) => {
   return res.status(handleStatusHTTP(status)).json(data);
 };
 
+const findByQuery = async (req, res) => {
+  const { q } = req.query;
+  const { status, data } = await productsService.findByQuery(q);
+  return res.status(handleStatusHTTP(status)).json(data);
+};
+
 const findById = async (req, res) => {
   const { id } = req.params;
   const { status, data } = await productsService.findById(id);
@@ -36,6 +42,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
   findAll,
   findById,
+  findByQuery,
   createProduct,
   updateProduct,
   deleteProduct,

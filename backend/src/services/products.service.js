@@ -16,6 +16,15 @@ const findById = async (productId) => {
   return { status: 'SUCCESSFUL', data: product };
 };
 
+const findByQuery = async (query) => {
+  const products = await productsModel.findAll();
+  if (!query) {
+    return { status: 'SUCCESSFUL', data: products };
+  }
+  const filteredProducts = products.filter((product) => product.name.includes(query));
+  return { status: 'SUCCESSFUL', data: filteredProducts };
+};
+
 const createProduct = async (product) => {
   const error = schema.validateAddProduct(product);
   if (error) {
@@ -56,6 +65,7 @@ const deleteProduct = async (productId) => {
 module.exports = {
   findAll,
   findById,
+  findByQuery,
   createProduct,
   updateProduct,
   deleteProduct,
