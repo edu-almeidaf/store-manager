@@ -12,7 +12,11 @@ const fieldSaleSchema = Joi.object({
 
 const addSaleSchema = Joi.array().items(fieldSaleSchema);
 
+const updateSaleSchema = Joi.number().integer().min(1).required()
+  .label('quantity');
+
 module.exports = {
   addProductSchema,
   addSaleSchema,
+  updateSaleSchema,
 };

@@ -43,6 +43,35 @@ const createSale = async (sale) => {
   return { status: 'CREATED', data: newSale };
 };
 
+const verifyProductIdUpdate = (productId, sale) => {
+  const isProductExists = sale.some((product) => product.productId === productId);
+  return isProductExists;
+};
+
+const updateSale = async ({ saleId, productId, quantity }) => {
+  const error = schema.validateUpdateSale(quantity);
+  if (error) {
+    return { status: error.status, data: { message: error.message } };
+  }
+
+  const findSale = await salesModel.findById(saleId);
+  if (findSale.length === 0) {
+    return { status: 'NOT_FOUND', data: { message: 'Sale not found' } };
+  }
+
+  const isProductIdExists = verifyProductIdUpdate(Number(productId), findSale);
+  if (!isProductIdExists) {
+    return { status: 'NOT_FOUND', data: { message: 'Product not found in sale' } };
+  }
+
+  await salesModel.updateSale({ saleId, productId, quantity });
+
+  const updatedSale = await salesModel.findUpdatedSaleById(saleId);
+  const updatedProductSale = updatedSale.find((product) => product.productId === Number(productId));
+
+  return { status: 'SUCCESSFUL', data: updatedProductSale };
+};
+
 const deleteSale = async (productId) => {
   const saleExists = await salesModel.findById(productId);
   if (!saleExists || saleExists.length === 0) {
@@ -59,5 +88,6 @@ module.exports = {
   findAll,
   findById,
   createSale,
+  updateSale,
   deleteSale,
 };

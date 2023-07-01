@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const {
-  salesFromModel, saleFromModel, saleIdFromModel, newSaleFromModel,
+  salesFromModel, saleFromModel, saleIdFromModel, newSaleFromModel, updateSaleFromModel, updateSaleFromService,
 } = require('../mocks/sales.mock');
 const { salesModel, productsModel } = require('../../../src/models');
 const { salesService } = require('../../../src/services');
@@ -117,6 +117,55 @@ describe('Realizando testes - SALES Service:', function () {
     const responseService = await salesService.deleteSale(inputId);
     expect(responseService.status).to.be.equal('NOT_FOUND');
     expect(responseService.data).to.be.deep.equal({ message: 'Sale not found' });
+  });
+
+  it('Atualizando sale com sucesso', async function () {
+    sinon.stub(salesModel, 'findById').resolves(saleFromModel);
+    sinon.stub(salesModel, 'updateSale').resolves(undefined);
+    sinon.stub(salesModel, 'findUpdatedSaleById').resolves(updateSaleFromModel);
+    const inputId = {
+      saleId: 1,
+      productId: 1,
+      quantity: 20,
+    };
+    const responseService = await salesService.updateSale(inputId);
+    expect(responseService.status).to.be.equal('SUCCESSFUL');
+    expect(responseService.data).to.be.deep.equal(updateSaleFromService);
+  });
+
+  it('Não é possível atualizar a sale com quantity igual a 0', async function () {
+    const inputId = {
+      saleId: 1,
+      productId: 1,
+      quantity: 0,
+    };
+    const responseService = await salesService.updateSale(inputId);
+    expect(responseService.status).to.be.equal('INVALID_VALUE');
+    expect(responseService.data).to.be.deep.equal({ message: '"quantity" must be greater than or equal to 1' });
+  });
+
+  it('Não é possível atualizar a sale com o id inexistente', async function () {
+    sinon.stub(salesModel, 'findById').resolves([]);
+    const inputId = {
+      saleId: 999999,
+      productId: 1,
+      quantity: 20,
+    };
+    const responseService = await salesService.updateSale(inputId);
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data).to.be.deep.equal({ message: 'Sale not found' });
+  });
+
+  it('Não é possível atualizar a sale com o productId inexistente', async function () {
+    sinon.stub(salesModel, 'findById').resolves(saleFromModel);
+    const inputId = {
+      saleId: 1,
+      productId: 999999,
+      quantity: 20,
+    };
+    const responseService = await salesService.updateSale(inputId);
+    expect(responseService.status).to.be.equal('NOT_FOUND');
+    expect(responseService.data).to.be.deep.equal({ message: 'Product not found in sale' });
   });
 
   afterEach(function () {

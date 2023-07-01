@@ -1,6 +1,9 @@
 const camelize = require('camelize');
 const connection = require('./connection');
-const { formattedColumns, formattedPlaceholders } = require('../utils/handleQuery');
+const {
+  formattedColumns,
+  formattedPlaceholders,
+} = require('../utils/handleQuery');
 
 const findAll = async () => {
   const query = `SELECT
@@ -27,6 +30,22 @@ const findById = async (saleId) => {
   INNER JOIN sales_products AS SP
   ON SP.sale_id = S.id
   WHERE sale_id = ?;`;
+  const [sale] = await connection.execute(query, [saleId]);
+
+  return camelize(sale);
+};
+
+const findUpdatedSaleById = async (saleId) => {
+  const query = `SELECT
+    S.date,
+    SP.product_id,
+    SP.quantity,
+    SP.sale_id
+  FROM sales AS S
+  INNER JOIN sales_products AS SP
+  ON SP.sale_id = S.id
+  WHERE sale_id = ?
+  ORDER BY S.id, SP.product_id;`;
   const [sale] = await connection.execute(query, [saleId]);
 
   return camelize(sale);
@@ -59,6 +78,15 @@ const insertProductsOnSale = async (id, sale) => {
   }
 };
 
+const updateSale = async ({ saleId, productId, quantity }) => {
+  const query = `UPDATE sales_products SET quantity = ?
+    WHERE sale_id = ? AND product_id = ?`;
+  
+  const [result] = await connection.execute(query, [quantity, saleId, productId]);
+
+  return result;
+};
+
 const removeSale = async (productId) => {
   const query = 'DELETE FROM sales WHERE id = ?';
   const [result] = await connection.execute(query, [productId]);
@@ -74,8 +102,10 @@ const removeSaleProducts = async (productId) => {
 module.exports = {
   findAll,
   findById,
+  findUpdatedSaleById,
   insertSale,
   insertProductsOnSale,
+  updateSale,
   removeSale,
   removeSaleProducts,
 };

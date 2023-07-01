@@ -92,6 +92,33 @@ const saleFromServiceCreated = {
   data: newSaleFromModel,
 };
 
+const updateSaleFromModel = [
+  {
+    date: '2023-06-30T22:23:30.000Z',
+    productId: 1,
+    quantity: 20,
+    saleId: 1,
+  },
+  {
+    date: '2023-06-30T22:23:30.000Z',
+    productId: 2,
+    quantity: 10,
+    saleId: 1,
+  },
+];
+
+const updateSaleFromService = {
+  date: '2023-06-30T22:23:30.000Z',
+  productId: 1,
+  quantity: 20,
+  saleId: 1,
+};
+
+const updateSaleFromServiceSuccessful = {
+  status: 'SUCCESSFUL',
+  data: updateSaleFromService,
+};
+
 module.exports = {
   salesFromDB,
   salesFromModel,
@@ -103,4 +130,7 @@ module.exports = {
   saleIdFromModel,
   newSaleFromModel,
   saleFromServiceCreated,
+  updateSaleFromModel,
+  updateSaleFromService,
+  updateSaleFromServiceSuccessful,
 };

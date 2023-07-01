@@ -18,6 +18,17 @@ const validateAddSale = (req, res, next) => {
   return next();
 };
 
+const validateUpdateSale = (req, res, next) => {
+  const { quantity } = req.body;
+
+  if (quantity === undefined) {
+    return res.status(400).json({ message: '"quantity" is required' });
+  }
+
+  return next();
+};
+
 module.exports = {
   validateAddSale,
+  validateUpdateSale,
 };

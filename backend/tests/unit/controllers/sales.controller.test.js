@@ -9,9 +9,11 @@ const {
   saleFromModel,
   newSaleFromModel,
   saleFromServiceCreated,
+  updateSaleFromService,
+  updateSaleFromServiceSuccessful,
 } = require('../mocks/sales.mock');
 const { salesController } = require('../../../src/controllers');
-const { validateAddSale } = require('../../../src/middlewares/validateSalesFields');
+const { validateAddSale, validateUpdateSale } = require('../../../src/middlewares/validateSalesFields');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -146,6 +148,41 @@ describe('Realizando testes - SALES CONTROLLER:', function () {
     await salesController.deleteSale(req, res);
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
+
+  it('Atualizando a sale com sucesso - status 200', async function () {
+    const next = sinon.stub().returns();
+    sinon.stub(salesService, 'updateSale').resolves(updateSaleFromServiceSuccessful);
+
+    const req = {
+      params: { saleId: 1, productId: 1 },
+      body: { quantity: 20 },
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+    validateUpdateSale(req, res, next);
+    expect(next).to.have.been.calledWith();
+    await salesController.updateSale(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(updateSaleFromService);
+  });
+
+  it('Não atualiza a sale sem o campo quantity - status 400', async function () {
+    const next = sinon.stub().returns();
+
+    const req = {
+      params: { saleId: 1, productId: 1 },
+      body: {},
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+    validateUpdateSale(req, res, next);
+    expect(res.status).to.have.been.calledWith(400);
+    expect(res.json).to.have.been.calledWith({ message: '"quantity" is required' });
   });
 
   afterEach(function () {
