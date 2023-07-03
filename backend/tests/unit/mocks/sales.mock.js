@@ -82,8 +82,8 @@ const saleIdFromModel = 3;
 const newSaleFromModel = {
   id: 3,
   itemsSold: [
-    { productId: 1, quantity: 1 },
-    { productId: 2, quantity: 5 },
+    { productId: 1, quantity: 5 },
+    { productId: 2, quantity: 10 },
   ],
 };
 
@@ -119,6 +119,15 @@ const updateSaleFromServiceSuccessful = {
   data: updateSaleFromService,
 };
 
+const affectedRowsMock = {
+  fieldCount: 0,
+  affectedRows: 1,
+  insertId: 0,
+  info: '',
+  serverStatus: 2,
+  warningStatus: 0,
+};
+
 module.exports = {
   salesFromDB,
   salesFromModel,
@@ -133,4 +142,5 @@ module.exports = {
   updateSaleFromModel,
   updateSaleFromService,
   updateSaleFromServiceSuccessful,
+  affectedRowsMock,
 };

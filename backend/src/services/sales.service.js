@@ -32,15 +32,20 @@ const createSale = async (sale) => {
   if (error) {
     return { status: error.status, data: { message: error.message } };
   }
+  
   const allProducts = await productsModel.findAll();
   const isProductIdExists = verifyProductId(allProducts, sale);
   if (!isProductIdExists) {
     return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
   }
 
-  const insertId = await salesModel.insertSale();
-  const newSale = await salesModel.insertProductsOnSale(insertId, sale);
-  return { status: 'CREATED', data: newSale };
+  const saleId = await salesModel.insertSale();
+  const insertPromises = sale.map(async ({ productId, quantity }) => {
+    await salesModel.insertProductsOnSale({ saleId, productId, quantity });
+  }); 
+  await Promise.all(insertPromises);
+
+  return { status: 'CREATED', data: { id: saleId, itemsSold: sale } };
 };
 
 const verifyProductIdUpdate = (productId, sale) => {

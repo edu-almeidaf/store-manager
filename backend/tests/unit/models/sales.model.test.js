@@ -10,7 +10,7 @@ const {
   saleIdFromDB,
   saleIdFromModel,
   updateSaleFromModel,
-  // newSaleFromModel,
+  affectedRowsMock,
 } = require('../mocks/sales.mock');
 const { updateStatusProductFromDB } = require('../mocks/products.mock');
 
@@ -42,6 +42,20 @@ describe('Realizando testes - SALES MODEL:', function () {
     const result = await salesModel.insertSale();
 
     expect(result).to.be.equal(saleIdFromModel);
+  });
+
+  it('Inserindo products na sale com sucesso', async function () {
+    sinon.stub(connection, 'execute').resolves([affectedRowsMock]);
+
+    const inputData = {
+      saleId: 3,
+      productId: 1,
+      quantity: 10,
+    };
+    
+    const result = await salesModel.insertProductsOnSale(inputData);
+
+    expect(result.affectedRows).to.be.equal(1);
   });
 
   // it('Inserindo sale com sucesso', async function () {

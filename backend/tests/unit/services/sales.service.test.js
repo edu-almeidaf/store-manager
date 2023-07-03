@@ -46,18 +46,23 @@ describe('Realizando testes - SALES Service:', function () {
   });
 
   it('Inserindo uma venda com sucesso', async function () {
-    sinon.stub(salesModel, 'insertSale').resolves(saleIdFromModel);
-    sinon.stub(salesModel, 'insertProductsOnSale').resolves(newSaleFromModel);
     sinon.stub(productsModel, 'findAll').resolves(productsFromModel);
+    sinon.stub(salesModel, 'insertSale').resolves(saleIdFromModel);
+    sinon.stub(salesModel, 'insertProductsOnSale')
+      .onFirstCall()
+      .resolves(1)
+      .onSecondCall()
+      .resolves(1);
+    // sinon.stub(salesModel, 'findById').resolves(saleFromModel);
 
     const inputData = [
       {
         productId: 1,
-        quantity: 1,
+        quantity: 5,
       },
       {
         productId: 2,
-        quantity: 5,
+        quantity: 10,
       },
     ];
 

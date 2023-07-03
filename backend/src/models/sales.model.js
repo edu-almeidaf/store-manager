@@ -57,25 +57,14 @@ const insertSale = async () => {
   return insertId;
 };
 
-const insertProductsOnSale = async (id, sale) => {
-  let insertPromises = [];
+const insertProductsOnSale = async (saleField) => {
+  const columns = formattedColumns(saleField);
+  const placeholders = formattedPlaceholders(saleField);
+  const query = `INSERT INTO sales_products (${columns}) VALUES (${placeholders})`;
 
-  insertPromises = sale.map(({ productId, quantity }) => {
-    const saleField = { saleId: id, productId, quantity };
-    const columns = formattedColumns(saleField);
-    const placeholders = formattedPlaceholders(saleField);
-    const query = `INSERT INTO sales_products (${columns}) VALUES (${placeholders})`;
-
-    return connection.execute(query, [...Object.values(saleField)]);
-  });
-
-  await Promise.all(insertPromises);
-
-  const saleSuccessful = await findById(id);
-
-  if (saleSuccessful.length > 0) {
-    return { id, itemsSold: sale };
-  }
+  const [affectedRows] = await connection.execute(query, [...Object.values(saleField)]);
+  console.log(affectedRows);
+  return affectedRows;
 };
 
 const updateSale = async ({ saleId, productId, quantity }) => {
