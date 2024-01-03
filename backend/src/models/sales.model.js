@@ -62,9 +62,9 @@ const insertProductsOnSale = async (saleField) => {
   const placeholders = formattedPlaceholders(saleField);
   const query = `INSERT INTO sales_products (${columns}) VALUES (${placeholders})`;
 
-  const [affectedRows] = await connection.execute(query, [...Object.values(saleField)]);
-  console.log(affectedRows);
-  return affectedRows;
+  const [result] = await connection.execute(query, [...Object.values(saleField)]);
+
+  return result;
 };
 
 const updateSale = async ({ saleId, productId, quantity }) => {
